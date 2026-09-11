@@ -1,10 +1,10 @@
 # BulkMarket API
 
-API de Sprint 1 para autenticación JWT y administración del negocio asociado a cada cuenta.
+API de BulkMarket para autenticación JWT y administración del negocio asociado a cada cuenta.
 
 ## Inicio
 
-1. Copiá `.env.example` como `.env` y definí `JWT_SECRET`.
+1. Crea `.env` y definí `JWT_SECRET`.
 2. Iniciá PostgreSQL con `docker compose up -d`.
 3. Ejecutá `npm install` y `npm run start:dev`.
 
