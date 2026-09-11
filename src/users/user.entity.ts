@@ -1,22 +1,22 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Business } from '../business/business.entity';
+import { Negocio } from '../business/business.entity';
 
-export enum UserRole {
-  BUYER = 'BUYER',
-  SELLER = 'SELLER',
+export enum RolCliente {
+  COMPRADOR = 'COMPRADOR',
+  VENDEDOR = 'VENDEDOR',
 }
 
-@Entity('users')
-export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+@Entity('cliente')
+export class Cliente {
+  @PrimaryGeneratedColumn({ name: 'id_cliente' })
+  idCliente: number;
 
-  @ManyToOne(() => Business, (business) => business.users, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'business_id' })
-  business: Business;
+  @ManyToOne(() => Negocio, (negocio) => negocio.clientes, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'id_negocio' })
+  negocio: Negocio;
 
-  @Column({ name: 'business_id' })
-  businessId: string;
+  @Column({ name: 'id_negocio' })
+  idNegocio: number;
 
   @Column({ length: 180, unique: true })
   email: string;
@@ -24,6 +24,6 @@ export class User {
   @Column({ name: 'password_hash', select: false })
   passwordHash: string;
 
-  @Column({ type: 'enum', enum: UserRole })
-  role: UserRole;
+  @Column({ name: 'rol', length: 20 })
+  rol: RolCliente;
 }

@@ -3,47 +3,47 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Business } from '../business/business.entity';
-import { User } from '../users/user.entity';
+import { Negocio } from '../business/business.entity';
+import { Cliente } from '../users/user.entity';
 import { LoginDto } from './dto/login.dto';
-import { RegisterDto } from './dto/register.dto';
+import { RegistroDto } from './dto/register.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User) private readonly users: Repository<User>,
-    @InjectRepository(Business) private readonly businesses: Repository<Business>,
+    @InjectRepository(Cliente) private readonly clientes: Repository<Cliente>,
+    @InjectRepository(Negocio) private readonly negocios: Repository<Negocio>,
     private readonly jwt: JwtService,
   ) {}
 
-  async register(dto: RegisterDto) {
-    const [emailInUse, taxIdInUse] = await Promise.all([
-      this.users.exists({ where: { email: dto.email.toLowerCase() } }),
-      this.businesses.exists({ where: { taxId: dto.business.taxId } }),
+  async registrar(dto: RegistroDto) {
+    const [emailEnUso, identificacionFiscalEnUso] = await Promise.all([
+      this.clientes.exists({ where: { email: dto.email.toLowerCase() } }),
+      this.negocios.exists({ where: { identificacionFiscal: dto.negocio.identificacionFiscal } }),
     ]);
-    if (emailInUse) throw new ConflictException('Ya existe una cuenta con ese correo electrónico.');
-    if (taxIdInUse) throw new ConflictException('Ya existe un negocio con esa identificación fiscal.');
+    if (emailEnUso) throw new ConflictException('Ya existe una cuenta con ese correo electrónico.');
+    if (identificacionFiscalEnUso) throw new ConflictException('Ya existe un negocio con esa identificación fiscal.');
 
-    const business = await this.businesses.save(this.businesses.create(dto.business));
-    const user = await this.users.save(this.users.create({
+    const negocio = await this.negocios.save(this.negocios.create(dto.negocio));
+    const cliente = await this.clientes.save(this.clientes.create({
       email: dto.email.toLowerCase(), passwordHash: await bcrypt.hash(dto.password, 12),
-      role: dto.role, businessId: business.id,
+      rol: dto.rol, idNegocio: negocio.idNegocio,
     }));
-    return this.createSession(user, business);
+    return this.crearSesion(cliente, negocio);
   }
 
-  async login(dto: LoginDto) {
-    const user = await this.users.createQueryBuilder('user')
-      .addSelect('user.passwordHash').leftJoinAndSelect('user.business', 'business')
-      .where('user.email = :email', { email: dto.email.toLowerCase() }).getOne();
-    if (!user || !(await bcrypt.compare(dto.password, user.passwordHash))) {
+  async iniciarSesion(dto: LoginDto) {
+    const cliente = await this.clientes.createQueryBuilder('cliente')
+      .addSelect('cliente.passwordHash').leftJoinAndSelect('cliente.negocio', 'negocio')
+      .where('cliente.email = :email', { email: dto.email.toLowerCase() }).getOne();
+    if (!cliente || !(await bcrypt.compare(dto.password, cliente.passwordHash))) {
       throw new UnauthorizedException('Correo electrónico o contraseña incorrectos.');
     }
-    return this.createSession(user, user.business);
+    return this.crearSesion(cliente, cliente.negocio);
   }
 
-  private createSession(user: User, business: Business) {
-    const accessToken = this.jwt.sign({ sub: user.id, businessId: user.businessId, role: user.role });
-    return { accessToken, user: { id: user.id, email: user.email, role: user.role }, business };
+  private crearSesion(cliente: Cliente, negocio: Negocio) {
+    const accessToken = this.jwt.sign({ sub: cliente.idCliente, idNegocio: cliente.idNegocio, rol: cliente.rol });
+    return { accessToken, cliente: { idCliente: cliente.idCliente, email: cliente.email, rol: cliente.rol }, negocio };
   }
 }

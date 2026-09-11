@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { BusinessModule } from './business/business.module';
+import { NegociosModule } from './business/business.module';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { BusinessModule } from './business/business.module';
       }),
     }),
     AuthModule,
-    BusinessModule,
+    NegociosModule,
   ],
 })
 export class AppModule {}

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Business } from './business.entity';
-import { BusinessController } from './business.controller';
-import { BusinessService } from './business.service';
+import { Negocio } from './business.entity';
+import { NegociosController } from './business.controller';
+import { NegociosService } from './business.service';
 
-@Module({ imports: [TypeOrmModule.forFeature([Business])], controllers: [BusinessController], providers: [BusinessService] })
-export class BusinessModule {}
+@Module({ imports: [TypeOrmModule.forFeature([Negocio])], controllers: [NegociosController], providers: [NegociosService] })
+export class NegociosModule {}

@@ -12,8 +12,8 @@ La API queda disponible en `http://localhost:3000/api`.
 
 | Método | Ruta | Descripción |
 | --- | --- | --- |
-| POST | `/auth/register` | Registra usuario y negocio. Roles: `BUYER`, `SELLER`. |
-| POST | `/auth/login` | Inicia sesión y entrega token JWT. |
-| GET | `/businesses/me` | Lee el negocio autenticado. |
-| PATCH | `/businesses/me` | Actualiza el negocio autenticado. |
-| DELETE | `/businesses/me` | Elimina negocio y usuarios asociados. |
+| POST | `/auth/registro` | Registra cliente y negocio. Roles: `COMPRADOR`, `VENDEDOR`. |
+| POST | `/auth/iniciar-sesion` | Inicia sesión y entrega token JWT. |
+| GET | `/negocios/mi-negocio` | Lee el negocio autenticado. |
+| PATCH | `/negocios/mi-negocio` | Actualiza el negocio autenticado. |
+| DELETE | `/negocios/mi-negocio` | Elimina negocio y clientes asociados. |

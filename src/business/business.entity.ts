@@ -1,32 +1,26 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { User } from '../users/user.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Cliente } from '../users/user.entity';
 
-@Entity('businesses')
-export class Business {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+@Entity('negocio')
+export class Negocio {
+  @PrimaryGeneratedColumn({ name: 'id_negocio' })
+  idNegocio: number;
 
-  @Column({ name: 'legal_name', length: 150 })
-  legalName: string;
+  @Column({ name: 'razon_social', length: 150 })
+  razonSocial: string;
 
-  @Column({ name: 'trade_name', length: 150 })
-  tradeName: string;
+  @Column({ name: 'nombre_comercial', length: 150 })
+  nombreComercial: string;
 
-  @Column({ name: 'tax_id', length: 50, unique: true })
-  taxId: string;
+  @Column({ name: 'identificacion_fiscal', length: 50, unique: true })
+  identificacionFiscal: string;
 
-  @Column({ length: 40 })
-  phone: string;
+  @Column({ name: 'telefono', length: 40 })
+  telefono: string;
 
-  @Column({ length: 255 })
-  address: string;
+  @Column({ name: 'direccion', length: 255 })
+  direccion: string;
 
-  @OneToMany(() => User, (user) => user.business)
-  users: User[];
-
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  @OneToMany(() => Cliente, (cliente) => cliente.negocio)
+  clientes: Cliente[];
 }
