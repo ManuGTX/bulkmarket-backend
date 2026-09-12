@@ -6,7 +6,7 @@ class RegistroNegocioDto {
   @IsString() @IsNotEmpty() razonSocial: string;
   @IsString() @IsNotEmpty() nombreComercial: string;
   @IsString() @Matches(/^\d{11}$/) identificacionFiscal: string;
-  @IsString() @IsNotEmpty() telefono: string;
+  @IsString() @IsNotEmpty() @Matches(/^\d{8,}$/) telefono: string;
   @IsString() @IsNotEmpty() direccion: string;
 }
 
