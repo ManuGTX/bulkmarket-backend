@@ -18,19 +18,28 @@ export class AuthService {
 
   async registrar(dto: RegistroDto) {
     const [emailEnUso, identificacionFiscalEnUso] = await Promise.all([
-      this.clientes.exists({ where: { email: dto.email.toLowerCase() } }),
-      this.negocios.exists({ where: { identificacionFiscal: dto.negocio.identificacionFiscal } }),
+        this.clientes.exists({ where: { email: dto.email.toLowerCase() } }),
+        this.negocios.exists({ where: { identificacionFiscal: dto.negocio.identificacionFiscal } }),
     ]);
-    if (emailEnUso) throw new ConflictException('Ya existe una cuenta con ese correo electrónico.');
-    if (identificacionFiscalEnUso) throw new ConflictException('Ya existe un negocio con esa identificación fiscal.');
+
+    if (emailEnUso) {
+        throw new ConflictException('Ya existe una cuenta con ese correo electrónico.');
+    }
+
+    if (identificacionFiscalEnUso) {
+        throw new ConflictException('Ya existe un negocio con esa identificación fiscal.');
+    }
 
     const negocio = await this.negocios.save(this.negocios.create(dto.negocio));
     const cliente = await this.clientes.save(this.clientes.create({
-      email: dto.email.toLowerCase(), passwordHash: await bcrypt.hash(dto.password, 12),
-      rol: dto.rol, idNegocio: negocio.idNegocio,
+        email: dto.email.toLowerCase(),
+        passwordHash: await bcrypt.hash(dto.password, 12),
+        rol: dto.rol,
+        idNegocio: negocio.idNegocio,
     }));
+
     return this.crearSesion(cliente, negocio);
-  }
+}
 
   async iniciarSesion(dto: LoginDto) {
     const cliente = await this.clientes.createQueryBuilder('cliente')

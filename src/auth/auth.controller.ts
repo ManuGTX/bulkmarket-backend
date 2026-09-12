@@ -7,6 +7,13 @@ import { RegistroDto } from './dto/register.dto';
 export class AuthController {
   constructor(private readonly auth: AuthService) {}
 
-  @Post('registro') registrar(@Body() dto: RegistroDto) { return this.auth.registrar(dto); }
-  @Post('iniciar-sesion') iniciarSesion(@Body() dto: LoginDto) { return this.auth.iniciarSesion(dto); }
+  @Post('registro')
+  registrar(@Body() dto: RegistroDto) {
+    return this.auth.registrar(dto);
+  }
+
+  @Post('iniciar-sesion')
+  iniciarSesion(@Body() dto: LoginDto) {
+    return this.auth.iniciarSesion(dto);
+  }
 }
